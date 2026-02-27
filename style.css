@@ -94,3 +94,58 @@ h1 {
     color: #b3b3b3;
     font-size: 0.9rem;
 }
+
+#audio-visualizer {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: flex-end;
+    height: 80px;
+    margin: 0 auto 15px;
+}
+
+.bar {
+    width: 8px;
+    background: linear-gradient(to top, #1DB954, #1ed760);
+    border-radius: 4px;
+    height: 8px;
+    transition: none;
+}
+
+#audio-visualizer.playing .bar {
+    animation: dance 0.6s ease-in-out infinite;
+}
+
+#audio-visualizer.playing .bar:nth-child(1) {
+    animation-delay: 0s;
+    animation-duration: 0.8s;
+}
+
+#audio-visualizer.playing .bar:nth-child(2) {
+    animation-delay: 0.1s;
+    animation-duration: 0.6s;
+}
+
+#audio-visualizer.playing .bar:nth-child(3) {
+    animation-delay: 0.2s;
+    animation-duration: 0.7s;
+}
+
+#audio-visualizer.playing .bar:nth-child(4) {
+    animation-delay: 0.1s;
+    animation-duration: 0.6s;
+}
+
+#audio-visualizer.playing .bar:nth-child(5) {
+    animation-delay: 0s;
+    animation-duration: 0.8s;
+}
+
+@keyframes dance {
+    0%, 100% {
+        height: 8px;
+    }
+    50% {
+        height: 50px;
+    }
+}

@@ -9,6 +9,7 @@ const nextSongButton = document.getElementById('next-song');
 const songInfo = document.getElementById('song-info');
 const songNameDisplay = document.getElementById('song-name');
 const artistNameDisplay = document.getElementById('artist-name');
+const audioVisualizer = document.getElementById('audio-visualizer');
 
 let player = null;
 let currentTrackId = null;
@@ -176,9 +177,11 @@ function initializePlayer() {
         if (isPaused) {
             playButton.textContent = "Play";
             playButton.classList.remove('playing');
+            audioVisualizer.classList.remove('playing');
         } else {
             playButton.textContent = "Stop";
             playButton.classList.add('playing');
+            audioVisualizer.classList.add('playing');
         }
 
         // Logic for when the song ends naturally: Reset so the next click loads a new song
