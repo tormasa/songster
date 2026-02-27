@@ -3,6 +3,7 @@ const CLIENT_ID = "0b2993e513404aff82e3a640a61ff627";
 
 const loginBtn = document.getElementById('login-btn');
 const gameUI = document.getElementById('game-ui');
+const playButton = document.getElementById('play-random');
 
 async function init() {
     const params = new URLSearchParams(window.location.search);
@@ -18,6 +19,14 @@ async function init() {
         
         // Clean the URL so the ?code= doesn't stay in the address bar
         window.history.replaceState({}, document.title, "/");
+        const script = document.createElement("script");
+        script.src = "https://sdk.scdn.co/spotify-player.js";
+        script.async = true;
+        document.body.appendChild(script);
+        window.onSpotifyWebPlaybackSDKReady = () => {
+            initializePlayer();
+        };
+        playButton.addEventListener('click', () => playRandomFromList());
         
         showGame();
     }
@@ -33,23 +42,6 @@ function showGame() {
 
 // Helper: Exchange Auth Code for Access Token
 async function redirectToAuthCodeFlow() {
-    // const verifier = localStorage.getItem("verifier");
-
-    // const params = new URLSearchParams();
-    // params.append("client_id", clientId);
-    // params.append("grant_type", "authorization_code");
-    // params.append("code", code);
-    // params.append("redirect_uri", REDIRECT_URI);
-    // params.append("code_verifier", verifier);
-
-    // const result = await fetch("https://accounts.spotify.com/api/token", {
-    //     method: "POST",
-    //     headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    //     body: params
-    // });
-
-    // const { access_token } = await result.json();
-    // return access_token;
     const generateRandomString = (length) => {
         const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
         const values = crypto.getRandomValues(new Uint8Array(length));
@@ -70,7 +62,7 @@ async function redirectToAuthCodeFlow() {
     const hashed = await sha256(codeVerifier);
     const codeChallenge = base64encode(hashed);
     const redirectUri = 'http://127.0.0.1:5500';
-    const scope = 'user-read-private user-read-email';
+    const scope = 'user-read-private user-read-email streaming user-modify-playback-state user-read-playback-state';
     const authUrl = new URL("https://accounts.spotify.com/authorize");
     window.localStorage.setItem('code_verifier', codeVerifier);
     const params =  {
@@ -111,6 +103,69 @@ const getToken = async code => {
     const response = await body.json();
 
     localStorage.setItem('access_token', response.access_token);
+}
+
+let currentDeviceId;
+
+function initializePlayer() {
+    const token = localStorage.getItem('access_token');
+    const player = new Spotify.Player({
+        name: 'Songster',
+        getOAuthToken: cb => { cb(token); }, // Use the token you just got
+        volume: 0.5
+    });
+
+    player.addListener('ready', ({ device_id }) => {
+        console.log('Ready with Device ID', device_id);
+        // To play a song, you send a PUT request to Spotify's 'play' endpoint
+        // passing this device_id.
+        currentDeviceId = device_id;
+    });
+
+    player.addListener('authentication_error', ({ message }) => {
+        console.error('Failed to authenticate', message);
+        localStorage.removeItem('access_token');
+        window.location.reload(); // Force a re-login
+    });
+
+    player.connect();
+};
+
+// This function triggers a specific song on YOUR browser player
+async function playSong(trackUri) {
+    if (!currentDeviceId)
+        return console.error("Player not ready!");
+
+    const accessToken = localStorage.getItem("access_token");
+    await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${currentDeviceId}`, {
+        method: 'PUT',
+        body: JSON.stringify({ uris: [trackUri] }),
+        headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`
+        },
+    });
+}
+
+async function playRandomFromList() {
+    try {
+        // 1. Fetch the local JSON file
+        const response = await fetch('./songs.json');
+        const songList = await response.json();
+
+        // 2. Pick a random index
+        const randomIndex = Math.floor(Math.random() * songList.length);
+        const selectedSong = songList[randomIndex];
+
+        console.log(`Now playing: ${selectedSong.name}`);
+
+        // 3. Convert ID to Spotify URI and play
+        const trackUri = `spotify:track:${selectedSong.id}`;
+        playSong(trackUri); 
+
+    } catch (error) {
+        console.error("Error loading song list:", error);
+    }
 }
 
 // Start the app
