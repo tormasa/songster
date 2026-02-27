@@ -4,6 +4,10 @@ const CLIENT_ID = "0b2993e513404aff82e3a640a61ff627";
 const loginBtn = document.getElementById('login-btn');
 const gameUI = document.getElementById('game-ui');
 const playButton = document.getElementById('play-random');
+const revealButton = document.getElementById('reveal-song');
+const songInfo = document.getElementById('song-info');
+const songNameDisplay = document.getElementById('song-name');
+const artistNameDisplay = document.getElementById('artist-name');
 
 let player = null;
 let currentTrackId = null;
@@ -16,11 +20,17 @@ playButton.addEventListener('click', async () => {
     // CASE 1: No song is loaded yet
     if (!currentTrackId) {
         await playRandomFromList();
+        revealButton.style.display = 'block';
+        songInfo.style.display = 'none';
     } 
     // CASE 2: A song exists, so we just toggle Play/Stop
     else {
         player.togglePlay();
     }
+});
+
+revealButton.addEventListener('click', async () => {
+    await revealSong();
 });
 
 async function init() {
@@ -205,6 +215,27 @@ async function playRandomFromList() {
 
     } catch (error) {
         console.error("Error loading song list:", error);
+    }
+}
+
+async function revealSong() {
+    try {
+        const accessToken = localStorage.getItem("access_token");
+        const response = await fetch(`https://api.spotify.com/v1/tracks/${currentTrackId}`, {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        });
+
+        const trackData = await response.json();
+        const trackName = trackData.name;
+        const artistName = trackData.artists.map(artist => artist.name).join(', ');
+
+        songNameDisplay.textContent = trackName;
+        artistNameDisplay.textContent = artistName;
+        songInfo.style.display = 'block';
+    } catch (error) {
+        console.error("Error fetching track info:", error);
     }
 }
 
