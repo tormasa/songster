@@ -211,7 +211,10 @@ async function playSong(trackUri) {
 async function playRandomFromList() {
     try {
         // 1. Fetch the local JSON file
-        const response = await fetch('./songs.json');
+        // Construct the correct path for GitHub Pages and local development
+        const basePath = import.meta.url.substring(0, import.meta.url.lastIndexOf('/'));
+        const jsonPath = `${basePath}/songs.json`;
+        const response = await fetch(jsonPath);
         const songList = await response.json();
 
         // 2. Pick a random index
