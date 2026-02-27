@@ -1,4 +1,4 @@
-const REDIRECT_URI = 'http://127.0.0.1:5500'; // Match your local server port
+const REDIRECT_URI = 'https://tormasa.github.io/songster/';
 const CLIENT_ID = "0b2993e513404aff82e3a640a61ff627";
 
 const loginBtn = document.getElementById('login-btn');
