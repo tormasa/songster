@@ -44,8 +44,17 @@ h1 {
     text-transform: uppercase;
 }
 
+#play-random.playing {
+    background-color: #e91e63; /* Spotify-style Red/Pink */
+}
+
 #play-random:hover, #login-btn:hover {
     background-color: #1ed760;
+    transform: scale(1.05);
+}
+
+#play-random.playing:hover {
+    background-color: #ff4081; /* A lighter, bright pink/red */
     transform: scale(1.05);
 }
 

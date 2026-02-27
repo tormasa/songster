@@ -5,6 +5,24 @@ const loginBtn = document.getElementById('login-btn');
 const gameUI = document.getElementById('game-ui');
 const playButton = document.getElementById('play-random');
 
+let player = null;
+let currentTrackId = null;
+let isPlayerReady = false;
+
+playButton.addEventListener('click', async () => {
+    if (!isPlayerReady)
+        return alert("Spotify Player not ready yet!");
+
+    // CASE 1: No song is loaded yet
+    if (!currentTrackId) {
+        await playRandomFromList();
+    } 
+    // CASE 2: A song exists, so we just toggle Play/Stop
+    else {
+        player.togglePlay();
+    }
+});
+
 async function init() {
     const params = new URLSearchParams(window.location.search);
     const code = params.get('code');
@@ -26,7 +44,6 @@ async function init() {
         window.onSpotifyWebPlaybackSDKReady = () => {
             initializePlayer();
         };
-        playButton.addEventListener('click', () => playRandomFromList());
         
         showGame();
     }
@@ -109,7 +126,7 @@ let currentDeviceId;
 
 function initializePlayer() {
     const token = localStorage.getItem('access_token');
-    const player = new Spotify.Player({
+    player = new Spotify.Player({
         name: 'Songster',
         getOAuthToken: cb => { cb(token); }, // Use the token you just got
         volume: 0.5
@@ -120,12 +137,34 @@ function initializePlayer() {
         // To play a song, you send a PUT request to Spotify's 'play' endpoint
         // passing this device_id.
         currentDeviceId = device_id;
+        isPlayerReady = true;
     });
 
     player.addListener('authentication_error', ({ message }) => {
         console.error('Failed to authenticate', message);
         localStorage.removeItem('access_token');
         window.location.reload(); // Force a re-login
+    });
+
+    player.addListener('player_state_changed', state => {
+        if (!state)
+            return;
+
+        const isPaused = state.paused;
+        const hasFinished = state.position === 0 && isPaused && state.restrictions.disallow_resuming_reasons;
+
+        if (isPaused) {
+            playButton.textContent = "Play";
+            playButton.classList.remove('playing');
+        } else {
+            playButton.textContent = "Stop";
+            playButton.classList.add('playing');
+        }
+
+        // Logic for when the song ends naturally: Reset so the next click loads a new song
+        if (hasFinished) {
+            currentTrackId = null;
+        }
     });
 
     player.connect();
@@ -158,10 +197,10 @@ async function playRandomFromList() {
         const selectedSong = songList[randomIndex];
 
         console.log(`Now playing: ${selectedSong.url}`);
-        const id = selectedSong.url.substring(selectedSong.url.indexOf('track/') + 6).split('?')[0];
+        currentTrackId = selectedSong.url.substring(selectedSong.url.indexOf('track/') + 6).split('?')[0];
 
         // 3. Convert ID to Spotify URI and play
-        const trackUri = `spotify:track:${id}`;
+        const trackUri = `spotify:track:${currentTrackId}`;
         playSong(trackUri); 
 
     } catch (error) {
