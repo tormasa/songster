@@ -157,10 +157,11 @@ async function playRandomFromList() {
         const randomIndex = Math.floor(Math.random() * songList.length);
         const selectedSong = songList[randomIndex];
 
-        console.log(`Now playing: ${selectedSong.name}`);
+        console.log(`Now playing: ${selectedSong.url}`);
+        const id = selectedSong.url.substring(selectedSong.url.indexOf('track/') + 6).split('?')[0];
 
         // 3. Convert ID to Spotify URI and play
-        const trackUri = `spotify:track:${selectedSong.id}`;
+        const trackUri = `spotify:track:${id}`;
         playSong(trackUri); 
 
     } catch (error) {
