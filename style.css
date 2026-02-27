@@ -1,0 +1,60 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #121212;
+    color: #FFFFFF;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+#app {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    text-align: center;
+}
+
+h1 {
+    font-size: 1.5rem;
+    letter-spacing: 2px;
+    opacity: 0.6;
+    position: absolute;
+    top: 40px; 
+    margin: 0;
+}
+
+#play-random, #login-btn {
+    background-color: #1DB954;
+    color: white;
+    border: none;
+    border-radius: 500px;
+    padding: 20px 60px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.2s;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    text-transform: uppercase;
+}
+
+#play-random:hover, #login-btn:hover {
+    background-color: #1ed760;
+    transform: scale(1.05);
+}
+
+#play-random:active, #login-btn:active {
+    transform: scale(0.95);
+}
+
+#game-ui p {
+    margin-bottom: 20px;
+    color: #b3b3b3;
+    font-size: 0.9rem;
+}
