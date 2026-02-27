@@ -82,11 +82,11 @@ h1 {
 }
 
 #reveal-song {
-    margin-top: 30px;
+    margin: 30px auto 0;
 }
 
 #next-song {
-    margin-top: 20px;
+    margin: 20px auto 0;
 }
 
 #game-ui p {
