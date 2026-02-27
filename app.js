@@ -99,7 +99,6 @@ async function redirectToAuthCodeFlow() {
     };
     const hashed = await sha256(codeVerifier);
     const codeChallenge = base64encode(hashed);
-    const redirectUri = 'http://127.0.0.1:5500';
     const scope = 'user-read-private user-read-email streaming user-modify-playback-state user-read-playback-state';
     const authUrl = new URL("https://accounts.spotify.com/authorize");
     window.localStorage.setItem('code_verifier', codeVerifier);
@@ -109,7 +108,7 @@ async function redirectToAuthCodeFlow() {
         scope,
         code_challenge_method: 'S256',
         code_challenge: codeChallenge,
-        redirect_uri: redirectUri,
+        redirect_uri: REDIRECT_URI,
     };
 
     authUrl.search = new URLSearchParams(params).toString();
