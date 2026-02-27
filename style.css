@@ -30,8 +30,22 @@ h1 {
     margin: 0;
 }
 
-#play-random, #login-btn, #reveal-song, #next-song {
+#play-random, #login-btn {
     background-color: #1DB954;
+    color: white;
+    border: none;
+    border-radius: 500px;
+    padding: 20px 60px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.2s;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    text-transform: uppercase;
+}
+
+#reveal-song, #next-song {
+    background-color: #8B5CF6;
     color: white;
     border: none;
     border-radius: 500px;
@@ -48,8 +62,13 @@ h1 {
     background-color: #e91e63; /* Spotify-style Red/Pink */
 }
 
-#play-random:hover, #login-btn:hover, #reveal-song:hover, #next-song:hover {
+#play-random:hover, #login-btn:hover {
     background-color: #1ed760;
+    transform: scale(1.05);
+}
+
+#reveal-song:hover, #next-song:hover {
+    background-color: #a78bfa;
     transform: scale(1.05);
 }
 
