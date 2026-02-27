@@ -5,6 +5,7 @@ const loginBtn = document.getElementById('login-btn');
 const gameUI = document.getElementById('game-ui');
 const playButton = document.getElementById('play-random');
 const revealButton = document.getElementById('reveal-song');
+const nextSongButton = document.getElementById('next-song');
 const songInfo = document.getElementById('song-info');
 const songNameDisplay = document.getElementById('song-name');
 const artistNameDisplay = document.getElementById('artist-name');
@@ -31,6 +32,15 @@ playButton.addEventListener('click', async () => {
 
 revealButton.addEventListener('click', async () => {
     await revealSong();
+    revealButton.style.display = 'none';
+    nextSongButton.style.display = 'block';
+});
+
+nextSongButton.addEventListener('click', async () => {
+    await playRandomFromList();
+    songInfo.style.display = 'none';
+    nextSongButton.style.display = 'none';
+    revealButton.style.display = 'block';
 });
 
 async function init() {
@@ -237,6 +247,13 @@ async function revealSong() {
     } catch (error) {
         console.error("Error fetching track info:", error);
     }
+}
+
+async function playNextSong() {
+    await playRandomFromList();
+    songInfo.style.display = 'none';
+    nextSongButton.style.display = 'none';
+    revealButton.style.display = 'block';
 }
 
 // Start the app

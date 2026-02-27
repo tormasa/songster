@@ -30,7 +30,7 @@ h1 {
     margin: 0;
 }
 
-#play-random, #login-btn, #reveal-song {
+#play-random, #login-btn, #reveal-song, #next-song {
     background-color: #1DB954;
     color: white;
     border: none;
@@ -48,7 +48,7 @@ h1 {
     background-color: #e91e63; /* Spotify-style Red/Pink */
 }
 
-#play-random:hover, #login-btn:hover, #reveal-song:hover {
+#play-random:hover, #login-btn:hover, #reveal-song:hover, #next-song:hover {
     background-color: #1ed760;
     transform: scale(1.05);
 }
@@ -58,12 +58,16 @@ h1 {
     transform: scale(1.05);
 }
 
-#play-random:active, #login-btn:active, #reveal-song:active {
+#play-random:active, #login-btn:active, #reveal-song:active, #next-song:active {
     transform: scale(0.95);
 }
 
 #reveal-song {
     margin-top: 30px;
+}
+
+#next-song {
+    margin-top: 20px;
 }
 
 #game-ui p {
