@@ -2,7 +2,7 @@ function getRedirectUri() {
     const hostname = window.location.hostname;
     
     if (hostname === '127.0.0.1' || hostname === 'localhost') {
-        return 'http://127.0.0.1:5050';
+        return 'http://127.0.0.1:5500';
     }
     
     return 'https://tormasa.github.io/songster/';
