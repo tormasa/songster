@@ -19,6 +19,7 @@ const nextSongButton = document.getElementById('next-song');
 const songInfo = document.getElementById('song-info');
 const songNameDisplay = document.getElementById('song-name');
 const artistNameDisplay = document.getElementById('artist-name');
+const albumInfoDisplay = document.getElementById('album-info');
 const audioVisualizer = document.getElementById('audio-visualizer');
 
 let player = null;
@@ -255,8 +256,11 @@ async function revealSong() {
         const trackData = await response.json();
         const trackName = trackData.name;
         const artistName = trackData.artists.map(artist => artist.name).join(', ');
+        const albumName = trackData.album.name;
+        const releaseYear = trackData.album.release_date.split('-')[0];
 
         songNameDisplay.textContent = trackName;
+        albumInfoDisplay.textContent = `${albumName} (${releaseYear})`;
         artistNameDisplay.textContent = artistName;
         songInfo.style.display = 'block';
     } catch (error) {
