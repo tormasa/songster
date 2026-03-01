@@ -112,7 +112,8 @@ async function main() {
         
         // Merge: add new tracks that aren't already in the file
         const existingIds = new Set(existingData.map(song => song.id));
-        const newTracks = tracks.filter(track => !existingIds.has(track.id));
+        const newTrackIds = tracks.filter(track => !existingIds.has(track));
+        const newTracks = newTrackIds.map(id => ({ id }));
         
         const combined = [...existingData, ...newTracks];
         
