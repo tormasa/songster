@@ -128,8 +128,6 @@ async function redirectToAuthCodeFlow() {
 
     authUrl.search = new URLSearchParams(params).toString();
     window.location.href = authUrl.toString();
-    const urlParams = new URLSearchParams(window.location.search);
-    let code = urlParams.get('code');
 }
 
 const getToken = async code => {
