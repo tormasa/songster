@@ -25,6 +25,7 @@ const audioVisualizer = document.getElementById('audio-visualizer');
 let player = null;
 let currentTrackId = null;
 let isPlayerReady = false;
+let currentSongList = [];
 
 playButton.addEventListener('click', async () => {
     if (!isPlayerReady)
@@ -58,6 +59,9 @@ nextSongButton.addEventListener('click', async () => {
 async function init() {
     const params = new URLSearchParams(window.location.search);
     const code = params.get('code');
+    const songListRaw = localStorage.getItem("currentSongList");
+    if (songListRaw)
+        currentSongList = JSON.parse(songListRaw);
 
     if (!code) {
         // STEP 1: Show Login Button if not authenticated
@@ -221,19 +225,24 @@ async function playSong(trackUri) {
 
 async function playRandomFromList() {
     try {
-        // 1. Fetch the local JSON file
-        // Construct the correct path for GitHub Pages and local development
-        const basePath = import.meta.url.substring(0, import.meta.url.lastIndexOf('/'));
-        const jsonPath = `${basePath}/songs.json`;
-        const response = await fetch(jsonPath);
-        const songList = await response.json();
+        console.log("songs remaining on current song list: ", currentSongList.length);
+        if (currentSongList.length == 0) {
+            // 1. Fetch the local JSON file
+            // Construct the correct path for GitHub Pages and local development
+            const basePath = import.meta.url.substring(0, import.meta.url.lastIndexOf('/'));
+            const jsonPath = `${basePath}/songs.json`;
+            const response = await fetch(jsonPath);
+            const songList = await response.json();
+            currentSongList = songList.map(s => s.id);
+        }
 
         // 2. Pick a random index
-        const randomIndex = Math.floor(Math.random() * songList.length);
-        const selectedSong = songList[randomIndex];
+        const randomIndex = Math.floor(Math.random() * currentSongList.length);
+        currentTrackId = currentSongList[randomIndex];
+        currentSongList.splice(randomIndex, 1);
+        localStorage.setItem("currentSongList", JSON.stringify(currentSongList));
 
-        console.log(`Now playing: ${selectedSong.id}`);
-        currentTrackId = selectedSong.id;
+        console.log(`Now playing: ${currentTrackId}`);
 
         // 3. Convert ID to Spotify URI and play
         const trackUri = `spotify:track:${currentTrackId}`;
