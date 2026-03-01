@@ -1,4 +1,14 @@
-const REDIRECT_URI = 'https://tormasa.github.io/songster/';
+function getRedirectUri() {
+    const hostname = window.location.hostname;
+    
+    if (hostname === '127.0.0.1' || hostname === 'localhost') {
+        return 'http://127.0.0.1:5050';
+    }
+    
+    return 'https://tormasa.github.io/songster/';
+}
+
+const REDIRECT_URI = getRedirectUri();
 const CLIENT_ID = "0b2993e513404aff82e3a640a61ff627";
 
 const loginBtn = document.getElementById('login-btn');
