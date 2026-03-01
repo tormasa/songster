@@ -109,7 +109,7 @@ async function redirectToAuthCodeFlow() {
     };
     const hashed = await sha256(codeVerifier);
     const codeChallenge = base64encode(hashed);
-    const scope = 'user-read-private user-read-email streaming user-modify-playback-state user-read-playback-state';
+    const scope = 'user-read-private user-read-email streaming user-modify-playback-state user-read-playback-state playlist-read-private';
     const authUrl = new URL("https://accounts.spotify.com/authorize");
     window.localStorage.setItem('code_verifier', codeVerifier);
     const params =  {
@@ -231,8 +231,8 @@ async function playRandomFromList() {
         const randomIndex = Math.floor(Math.random() * songList.length);
         const selectedSong = songList[randomIndex];
 
-        console.log(`Now playing: ${selectedSong.url}`);
-        currentTrackId = selectedSong.url.substring(selectedSong.url.indexOf('track/') + 6).split('?')[0];
+        console.log(`Now playing: ${selectedSong.id}`);
+        currentTrackId = selectedSong.id;
 
         // 3. Convert ID to Spotify URI and play
         const trackUri = `spotify:track:${currentTrackId}`;
