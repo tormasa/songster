@@ -260,7 +260,7 @@ async function revealSong() {
         const releaseYear = trackData.album.release_date.split('-')[0];
 
         songNameDisplay.textContent = trackName;
-        albumInfoDisplay.textContent = `${albumName} (${releaseYear})`;
+        albumInfoDisplay.textContent = `${albumName} (${releaseYear}) ${trackData.album.album_type == 'compilation' ? "[compilation]" : ""}`;
         artistNameDisplay.textContent = artistName;
         songInfo.style.display = 'block';
     } catch (error) {
